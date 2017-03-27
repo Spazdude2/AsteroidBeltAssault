@@ -11,7 +11,7 @@ namespace Asteroid_Belt_Assault
     class PlayerManager
     {
         public Sprite playerSprite;
-        private float playerSpeed = 160.0f;
+        private float playerSpeed = 180.0f;
         private Rectangle playerAreaLimit;
 
         public long PlayerScore = 0;

@@ -24,7 +24,7 @@ namespace Asteroid_Belt_Assault
         Texture2D titleScreen;
         Texture2D spriteSheet;
 
-        StarField starField;
+        List<StarField> starFields;
         AsteroidManager asteroidManager;
         PlayerManager playerManager;
         EnemyManager enemyManager;
@@ -76,16 +76,42 @@ namespace Asteroid_Belt_Assault
             titleScreen = Content.Load<Texture2D>(@"Textures\TitleScreen");
             spriteSheet = Content.Load<Texture2D>(@"Textures\spriteSheet");
 
-            starField = new StarField(
+            starFields = new List<StarField>();
+
+            starFields.Add(new StarField(
                 this.Window.ClientBounds.Width,
                 this.Window.ClientBounds.Height,
-                200,
+                50,
+                new Vector2(0, 40f),
+                spriteSheet,
+                new Rectangle(0, 450, 2, 2)));
+
+            starFields.Add(new StarField(
+                this.Window.ClientBounds.Width,
+                this.Window.ClientBounds.Height,
+                150,
                 new Vector2(0, 30f),
                 spriteSheet,
-                new Rectangle(0, 450, 2, 2));
+                new Rectangle(0, 450, 2, 2)));
+
+            starFields.Add(new StarField(
+                this.Window.ClientBounds.Width,
+                this.Window.ClientBounds.Height,
+                150,
+                new Vector2(0, 15f),
+                spriteSheet,
+                new Rectangle(0, 450, 2, 2)));
+
+            starFields.Add(new StarField(
+                this.Window.ClientBounds.Width,
+                this.Window.ClientBounds.Height,
+                50,
+                new Vector2(0, 5f),
+                spriteSheet,
+                new Rectangle(0, 450, 2, 2)));
 
             asteroidManager = new AsteroidManager(
-                10,
+                5,
                 spriteSheet,
                 new Rectangle(0, 0, 50, 50),
                 20,
@@ -191,7 +217,9 @@ namespace Asteroid_Belt_Assault
 
                 case GameStates.Playing:
 
-                    starField.Update(gameTime);
+                    for (int i = 0; i < starFields.Count; i++)
+                        starFields[i].Update(gameTime);
+
                     asteroidManager.Update(gameTime);
                     playerManager.Update(gameTime);
                     enemyManager.Update(gameTime);
@@ -219,7 +247,9 @@ namespace Asteroid_Belt_Assault
                     playerDeathTimer +=
                         (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                    starField.Update(gameTime);
+
+                    for (int i = 0; i < starFields.Count; i++)
+                        starFields[i].Update(gameTime);
                     asteroidManager.Update(gameTime);
                     enemyManager.Update(gameTime);
                     playerManager.PlayerShotManager.Update(gameTime);
@@ -235,7 +265,9 @@ namespace Asteroid_Belt_Assault
                 case GameStates.GameOver:
                     playerDeathTimer +=
                         (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    starField.Update(gameTime);
+
+                    for (int i = 0; i < starFields.Count; i++)
+                        starFields[i].Update(gameTime);
                     asteroidManager.Update(gameTime);
                     enemyManager.Update(gameTime);
                     playerManager.PlayerShotManager.Update(gameTime);
@@ -273,7 +305,8 @@ namespace Asteroid_Belt_Assault
                 (gameState == GameStates.PlayerDead) ||
                 (gameState == GameStates.GameOver))
             {
-                starField.Draw(spriteBatch);
+                for (int i = 0; i < starFields.Count; i++)
+                    starFields[i].Draw(spriteBatch);
                 asteroidManager.Draw(spriteBatch);
                 playerManager.Draw(spriteBatch);
                 enemyManager.Draw(spriteBatch);

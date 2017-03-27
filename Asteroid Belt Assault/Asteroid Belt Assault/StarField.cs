@@ -12,10 +12,11 @@ namespace Asteroid_Belt_Assault
         private List<Sprite> stars = new List<Sprite>();
         private int screenWidth = 800;
         private int screenHeight = 600;
-        private Random rand = new Random();
+        private Random rand;
         private Color[] colors = { Color.White, Color.Yellow, 
                            Color.Wheat, Color.WhiteSmoke, 
                            Color.SlateGray };
+        public static int seed = 0;
 
         public StarField(
             int screenWidth,
@@ -25,6 +26,9 @@ namespace Asteroid_Belt_Assault
             Texture2D texture,
             Rectangle frameRectangle)
         {
+            seed += System.Environment.TickCount;
+            rand = new Random(seed);
+
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
             for (int x = 0; x < starCount; x++)
