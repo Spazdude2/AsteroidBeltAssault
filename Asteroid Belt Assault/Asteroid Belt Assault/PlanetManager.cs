@@ -29,6 +29,8 @@ namespace Asteroid_Belt_Assault
             planetRects.Add(new Rectangle(88, 279, 173, 156));
             planetRects.Add(new Rectangle(341, 280, 117, 110));
             planetRects.Add(new Rectangle(69, 43, 165, 162));
+            planetRects.Add(new Rectangle(269, 54, 130, 131));
+            planetRects.Add(new Rectangle(740, 26, 324, 206));
 
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
