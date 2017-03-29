@@ -14,6 +14,7 @@ namespace Asteroid_Belt_Assault
         private int screenWidth = 800;
         private int screenHeight = 600;
         private Random rand;
+        int currentPlanet = 0;
 
         public static int seed = 0;
 
@@ -30,7 +31,9 @@ namespace Asteroid_Belt_Assault
             planetRects.Add(new Rectangle(341, 280, 117, 110));
             planetRects.Add(new Rectangle(69, 43, 165, 162));
             planetRects.Add(new Rectangle(269, 54, 130, 131));
-            planetRects.Add(new Rectangle(740, 26, 324, 206));
+            planetRects.Add(new Rectangle(422, 39, 729, 234));
+            planetRects.Add(new Rectangle(797, 561, 833, 589));
+            planetRects.Add(new Rectangle(20, 517, 746, 916));
 
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
@@ -45,7 +48,8 @@ namespace Asteroid_Belt_Assault
                     Vector2.Zero));
             }
 
-            planets[rand.Next(0, planets.Count)].Velocity = new Vector2(0, 50);
+            currentPlanet = rand.Next(0, planets.Count);
+            planets[currentPlanet].Velocity = new Vector2(0, 50);
 
         }
 
@@ -61,7 +65,9 @@ namespace Asteroid_Belt_Assault
                         rand.Next(0, screenWidth), -200);
                     star.Velocity = Vector2.Zero;
 
-                    planets[rand.Next(0, planets.Count)].Velocity = new Vector2(0, 50);
+                    currentPlanet = (currentPlanet + 1) % planets.Count;
+
+                    planets[currentPlanet].Velocity = new Vector2(0, 50);
                 }
             }
         }
