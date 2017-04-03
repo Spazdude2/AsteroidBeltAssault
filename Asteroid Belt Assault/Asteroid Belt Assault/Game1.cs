@@ -130,7 +130,7 @@ namespace Asteroid_Belt_Assault
 
             playerManager = new PlayerManager(
                 spriteSheet,    
-                new Rectangle(7, 146, 63, 62),    
+                new Rectangle(7, 146, 62, 62),    
                 1,
                 new Rectangle(
                     0,
