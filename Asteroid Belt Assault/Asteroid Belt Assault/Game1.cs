@@ -42,9 +42,11 @@ namespace Asteroid_Belt_Assault
         private float titleScreenDelayTime = 1f;
 
         private int playerStartingLives = 3;
+        private int playerStartingHealth = 100;
         private Vector2 playerStartLocation = new Vector2(390, 550);
         private Vector2 scoreLocation = new Vector2(20, 10);
         private Vector2 livesLocation = new Vector2(20, 25);
+        private Vector2 healthLocation = new Vector2(20, 40);
 
 
         public Game1()
@@ -185,6 +187,7 @@ namespace Asteroid_Belt_Assault
             {
                 asteroid.Location = new Vector2(-500, -500);
             }
+            playerManager.HealthRemaining = playerStartingHealth;
             enemyManager.Enemies.Clear();
             enemyManager.Active = true;
             playerManager.PlayerShotManager.Shots.Clear();
@@ -333,6 +336,12 @@ namespace Asteroid_Belt_Assault
                     scoreLocation,
                     Color.White);
 
+                spriteBatch.DrawString(
+                    pericles14,
+                    "Health: " + playerManager.HealthRemaining.ToString(),
+                    healthLocation,
+                    Color.White);
+
                 if (playerManager.LivesRemaining >= 0)
                 {
                     spriteBatch.DrawString(
@@ -342,8 +351,22 @@ namespace Asteroid_Belt_Assault
                         livesLocation,
                         Color.White);
                 }
+                if (playerManager.HealthRemaining <= 0)
+                {
+                    playerManager.Destroyed = true;
+                }
             }
-
+            if ((playerManager.Destroyed == true))
+            {
+                spriteBatch.DrawString(
+                    pericles14,
+                    "Y O U  D I E D !",
+                    new Vector2(
+                        this.Window.ClientBounds.Width / 2 -
+                          pericles14.MeasureString("Y O U  D I E D !").X / 2,
+                        50),
+                    Color.White);
+            }
             if ((gameState == GameStates.GameOver))
             {
                 spriteBatch.DrawString(

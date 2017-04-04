@@ -15,6 +15,8 @@ namespace Asteroid_Belt_Assault
         private Vector2 offScreen = new Vector2(-500, -500);
         private Vector2 shotToAsteroidImpact = new Vector2(0, -20);
         private int enemyPointValue = 100;
+        private int shotHealthValue = -10;
+        private int asteroidHealthValue = -25;
 
         public CollisionManager(
             AsteroidManager asteroidManager,
@@ -76,7 +78,7 @@ namespace Asteroid_Belt_Assault
                     playerManager.playerSprite.CollisionRadius))
                 {
                     shot.Location = offScreen;
-                    playerManager.Destroyed = true;
+                    playerManager.HealthRemaining += shotHealthValue;
                     explosionManager.AddExplosion(
                         playerManager.playerSprite.Center,
                         Vector2.Zero);
@@ -97,7 +99,7 @@ namespace Asteroid_Belt_Assault
                         enemy.EnemySprite.Center,
                         enemy.EnemySprite.Velocity / 10);
 
-                    playerManager.Destroyed = true;
+                    playerManager.HealthRemaining = 0;
 
                     explosionManager.AddExplosion(
                         playerManager.playerSprite.Center,
@@ -120,7 +122,7 @@ namespace Asteroid_Belt_Assault
 
                     asteroid.Location = offScreen;
 
-                    playerManager.Destroyed = true;
+                    playerManager.HealthRemaining += asteroidHealthValue;
                     explosionManager.AddExplosion(
                         playerManager.playerSprite.Center,
                         Vector2.Zero);
