@@ -19,11 +19,13 @@ namespace Asteroid_Belt_Assault
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        enum GameStates { TitleScreen, Playing, PlayerDead, GameOver };
+        enum GameStates { TitleScreen, Playing, PlayerDead, GameOver, YouWin };
         GameStates gameState = GameStates.TitleScreen;
         Texture2D titleScreen;
         Texture2D spriteSheet;
         Texture2D planetSheet;
+        Texture2D Guydish;
+        Texture2D Winner;
 
         List<StarField> starFields;
         AsteroidManager asteroidManager;
@@ -35,6 +37,8 @@ namespace Asteroid_Belt_Assault
         CollisionManager collisionManager;
 
         SpriteFont pericles14;
+
+        
 
         private float playerDeathDelayTime = 10f;
         private float playerDeathTimer = 0f;
@@ -80,6 +84,8 @@ namespace Asteroid_Belt_Assault
             titleScreen = Content.Load<Texture2D>(@"Textures\TitleScreen");
             spriteSheet = Content.Load<Texture2D>(@"Textures\spriteSheet");
             planetSheet = Content.Load<Texture2D>(@"Textures\Planets");
+            Guydish = Content.Load<Texture2D>(@"Textures\Guydish");
+            Winner = Content.Load<Texture2D>(@"Textures\Winner");
 
             planetManager = new PlanetManager(
                 this.Window.ClientBounds.Width,
@@ -255,6 +261,11 @@ namespace Asteroid_Belt_Assault
                         }
                     }
 
+                    if (playerManager.PlayerScore >= 1000)
+                    {
+                        gameState = GameStates.YouWin;
+                    }
+
                     break;
 
                 case GameStates.PlayerDead:
@@ -292,6 +303,13 @@ namespace Asteroid_Belt_Assault
                     {
                         gameState = GameStates.TitleScreen;
                     }
+                    break;
+
+
+                case GameStates.YouWin:
+
+
+
                     break;
 
             }
@@ -346,7 +364,7 @@ namespace Asteroid_Belt_Assault
                 {
                     spriteBatch.DrawString(
                         pericles14,
-                        "Ships Remaining: " +
+                        "Ships Remaining: " + 
                             playerManager.LivesRemaining.ToString(),
                         livesLocation,
                         Color.White);
@@ -366,9 +384,17 @@ namespace Asteroid_Belt_Assault
                           pericles14.MeasureString("Y O U  D I E D !").X / 2,
                         50),
                     Color.White);
+
+                spriteBatch.Draw(Guydish,
+                    new Rectangle(0, 0, this.Window.ClientBounds.Width,
+                        this.Window.ClientBounds.Height),
+                        Color.White);
             }
             if ((gameState == GameStates.GameOver))
             {
+                
+
+
                 spriteBatch.DrawString(
                     pericles14,
                     "G A M E  O V E R !",
@@ -377,6 +403,13 @@ namespace Asteroid_Belt_Assault
                           pericles14.MeasureString("G A M E  O V E R !").X / 2,
                         50),
                     Color.White);
+            }
+            if (gameState == GameStates.YouWin)
+            {
+                spriteBatch.Draw(Winner,
+                    new Rectangle(0, 0, this.Window.ClientBounds.Width,
+                        this.Window.ClientBounds.Height),
+                        Color.White);
             }
 
 
