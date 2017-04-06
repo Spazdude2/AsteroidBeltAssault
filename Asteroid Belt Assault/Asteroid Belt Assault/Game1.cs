@@ -19,13 +19,14 @@ namespace Asteroid_Belt_Assault
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        enum GameStates { TitleScreen, Playing, PlayerDead, GameOver, YouWin };
+        enum GameStates { TitleScreen, Playing, BossBattle, PlayerDead, GameOver, YouWin };
         GameStates gameState = GameStates.TitleScreen;
         Texture2D titleScreen;
         Texture2D spriteSheet;
         Texture2D planetSheet;
         Texture2D Guydish;
         Texture2D Winner;
+        Texture2D Boss;
 
         List<StarField> starFields;
         AsteroidManager asteroidManager;
@@ -33,6 +34,7 @@ namespace Asteroid_Belt_Assault
         EnemyManager enemyManager;
         ExplosionManager explosionManager;
         PlanetManager planetManager;
+        BossManager bossManager;
 
         CollisionManager collisionManager;
 
@@ -86,6 +88,7 @@ namespace Asteroid_Belt_Assault
             planetSheet = Content.Load<Texture2D>(@"Textures\Planets");
             Guydish = Content.Load<Texture2D>(@"Textures\Guydish");
             Winner = Content.Load<Texture2D>(@"Textures\Winner");
+            Boss = Content.Load<Texture2D>(@"Textures\Boss");
 
             planetManager = new PlanetManager(
                 this.Window.ClientBounds.Width,
@@ -147,6 +150,17 @@ namespace Asteroid_Belt_Assault
                     this.Window.ClientBounds.Height));
 
             enemyManager = new EnemyManager(
+                spriteSheet,
+                new Rectangle(0, 200, 50, 50),
+                6,
+                playerManager,
+                new Rectangle(
+                    0,
+                    0,
+                    this.Window.ClientBounds.Width,
+                    this.Window.ClientBounds.Height));
+
+            bossManager = new BossManager(
                 spriteSheet,
                 new Rectangle(0, 200, 50, 50),
                 6,
@@ -241,7 +255,10 @@ namespace Asteroid_Belt_Assault
 
                     asteroidManager.Update(gameTime);
                     playerManager.Update(gameTime);
-                    enemyManager.Update(gameTime);
+
+                    if (gameState != GameStates.BossBattle)
+                        enemyManager.Update(gameTime);
+
                     explosionManager.Update(gameTime);
                     collisionManager.CheckCollisions();
                     planetManager.Update(gameTime);
@@ -254,6 +271,10 @@ namespace Asteroid_Belt_Assault
                         if (playerManager.LivesRemaining < 0)
                         {
                             gameState = GameStates.GameOver;
+                            spriteBatch.Draw(Guydish,
+                        new Rectangle(0, 0, this.Window.ClientBounds.Width,
+                        this.Window.ClientBounds.Height),
+                        Color.White);
                         }
                         else
                         {
@@ -263,10 +284,15 @@ namespace Asteroid_Belt_Assault
 
                     if (playerManager.PlayerScore >= 1000)
                     {
-                        gameState = GameStates.YouWin;
+                        gameState = GameStates.BossBattle;
+                        asteroidManager.Clear();
+                        enemyManager.Enemies.Clear();
+
                     }
 
                     break;
+
+                    
 
                 case GameStates.PlayerDead:
                     playerDeathTimer +=
@@ -306,9 +332,14 @@ namespace Asteroid_Belt_Assault
                     break;
 
 
-                case GameStates.YouWin:
-
-
+                case GameStates.BossBattle:
+                    for (int i = 0; i < starFields.Count; i++)
+                        starFields[i].Update(gameTime);
+                    playerManager.Update(gameTime);
+                    enemyManager.Update(gameTime);
+                    explosionManager.Update(gameTime);
+                    collisionManager.CheckCollisions();
+                    planetManager.Update(gameTime);
 
                     break;
 
@@ -337,15 +368,25 @@ namespace Asteroid_Belt_Assault
 
             if ((gameState == GameStates.Playing) ||
                 (gameState == GameStates.PlayerDead) ||
-                (gameState == GameStates.GameOver))
+                (gameState == GameStates.GameOver) ||
+                gameState == GameStates.BossBattle)
             {
                 for (int i = 0; i < starFields.Count; i++)
                     starFields[i].Draw(spriteBatch);
                 planetManager.Draw(spriteBatch);
 
-                asteroidManager.Draw(spriteBatch);
+                if (gameState != GameStates.BossBattle)
+                {
+                    asteroidManager.Draw(spriteBatch);
+                    enemyManager.Draw(spriteBatch);
+                }
+                else
+                {
+                    bossManager.Draw(spriteBatch);
+                }
+
                 playerManager.Draw(spriteBatch);
-                enemyManager.Draw(spriteBatch);
+
                 explosionManager.Draw(spriteBatch);
 
                 spriteBatch.DrawString(
@@ -385,10 +426,7 @@ namespace Asteroid_Belt_Assault
                         50),
                     Color.White);
 
-                spriteBatch.Draw(Guydish,
-                    new Rectangle(0, 0, this.Window.ClientBounds.Width,
-                        this.Window.ClientBounds.Height),
-                        Color.White);
+                
             }
             if ((gameState == GameStates.GameOver))
             {
